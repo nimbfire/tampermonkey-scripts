@@ -11,7 +11,7 @@ var nfvars = {};
 nfvars.getChat = false;
 nfvars.downloadAudios = false;
 nfvars.downloadAudiosIterator = 0;
-nfvars.downloadAudiosInterval = 10;
+nfvars.downloadAudiosInterval = 2;
 nfvars.downloadAudiosArray = new Array();
 
 setTimeout(iterate, 2000);
@@ -23,6 +23,10 @@ function iterate() {
   downloadAllAudios();
     // Call again in 2 sec
   tid = setTimeout(iterate, 2000);
+}
+
+function preDownloadAll() {
+  $('.audio .icon-audio-download').click();
 }
 
 function downloadNextAudio(){
@@ -113,6 +117,7 @@ function addButtonns(){
     // Add buttons
     jQuery('.pane-chat-header').prepend('<a href="#" id="download-all">Download all audios</a>');
     jQuery('.pane-chat-header').prepend('<a href="#" id="get-all-chat">Get all chat</a>');
+    jQuery('.pane-chat-header').prepend('<a href="#" id="download-click-all">Click all download buttons</a>');
   
     // Add processed class
     jQuery('.pane-chat-header').addClass('processed');
@@ -120,6 +125,11 @@ function addButtonns(){
     // Bind Get
     jQuery('#get-all-chat').on('click', function(){
       nfvars.getChat = true;
+    });
+    
+    // Bind Download
+    jQuery('#download-click-all').on('click', function(){
+      preDownloadAll();
     });
     
     // Bind Download
