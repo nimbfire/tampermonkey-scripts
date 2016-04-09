@@ -9,6 +9,10 @@ document.getElementsByTagName('head')[0].appendChild(jq);
 
 var nfvars = {};
 nfvars.getChat = false;
+nfvars.downloadAudios = false;
+nfvars.downloadAudiosIterator = 0;
+nfvars.downloadAudiosInterval = 10;
+nfvars.downloadAudiosArray = new Array();
 
 setTimeout(iterate, 2000);
 
@@ -16,12 +20,40 @@ function iterate() {
   changedPane();
   addDownloadLinks();
   getAllChat();
+  downloadAllAudios();
     // Call again in 2 sec
   tid = setTimeout(iterate, 2000);
 }
+
+function downloadNextAudio(){};
+
+function downloadAudiosPrepare() {
+  jQuery('.audio').each(function(){
+    var currentElement = $(this);
+    var src = currentElement.find('audio').attr('src');
+    if (src) {
+      nfvars.downloadAudiosArray = [];
+      nfvars.downloadAudiosArray[nfvars.downloadAudiosArray.length] = src;
+    }
+  });
+}
+
+function downloadAllAudios() {
+  if (nfvars.downloadAudios) {
+    if (nfvars.downloadAudiosIterator == nfvars.downloadAudiosInterval) {
+      nfvars.downloadAudiosIterator = 0;
+      downloadNextAudio();
+    }
+    nfvars.downloadAudiosIterator++;
+  }
+}
+
 function resetConfigs() {
   nfvars.getChat = false;
+  nfvars.downloadAudios = false;
+  nfvars.downloadAudiosArray = new Array();
 }
+
 // If chance panes, add the buttons and reset configs
 function changedPane() {
   // Uses the buttons to know if the pane has changed
@@ -61,9 +93,14 @@ function addButtonns(){
     // Add processed class
     jQuery('.pane-chat-header').addClass('processed');
     
-    // Bind buttons
+    // Bind Get
     jQuery('#get-all-chat').on('click', function(){
       nfvars.getChat = true;
+    });
+    
+    // Bind Download
+    jQuery('#get-all-chat').on('click', function(){
+      nfvars.downloadAudios = true;
     });
   }
 }
