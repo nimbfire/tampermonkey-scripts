@@ -7,16 +7,30 @@ var jq = document.createElement('script');
 jq.src = "https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js";
 document.getElementsByTagName('head')[0].appendChild(jq);
 
+var nfvars = {};
+nfvars.getChat = false;
 
 setTimeout(iterate, 2000);
 
 function iterate() {
-  addButtonns();
+  changedPane();
   addDownloadLinks();
-  
+  getAllChat();
     // Call again in 2 sec
   tid = setTimeout(iterate, 2000);
 }
+function resetConfigs() {
+  nfvars.getChat = false;
+}
+// If chance panes, add the buttons and reset configs
+function changedPane() {
+  // Uses the buttons to know if the pane has changed
+  if (!jQuery('.pane-chat-header').hasClass('processed')) {
+    resetConfigs();
+    addButtonns();
+  }
+}
+
 // Add a download link to each audio that has a src. It calls itself again.
 function addDownloadLinks() {
   jQuery('.audio').each(function(){
@@ -49,7 +63,7 @@ function addButtonns(){
     
     // Bind buttons
     jQuery('#get-all-chat').on('click', function(){
-      getAllChat();
+      nfvars.getChat = true;
     });
   }
 }
@@ -57,6 +71,7 @@ function addButtonns(){
 
 // Roll the chat until the first ever.
 function getAllChat() {
-  jQuery('.pane-chat-tile-container .pane-chat-msgs').animate({scrollTop:0}, '500');
-  setTimeout(getAllChat, 2000);
+  if (nfvars.getChat) {
+    jQuery('.pane-chat-tile-container .pane-chat-msgs').animate({scrollTop:0}, '500');
+  }
 }
