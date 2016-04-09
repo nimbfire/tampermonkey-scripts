@@ -8,39 +8,50 @@ jq.src = "https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js";
 document.getElementsByTagName('head')[0].appendChild(jq);
 
 
-setTimeout(addDownloadLinks, 2000);
-addButtonns();
+setTimeout(iterate, 2000);
 
+function iterate() {
+  addButtonns();
+  addDownloadLinks();
+  
+    // Call again in 2 sec
+  tid = setTimeout(iterate, 2000);
+}
 // Add a download link to each audio that has a src. It calls itself again.
 function addDownloadLinks() {
   jQuery('.audio').each(function(){
     var currentElement = $(this);
     var src = currentElement.find('audio').attr('src');
     if (src) {
-      if (currentElement.hasClass('download')) {
+      if (currentElement.hasClass('processed')) {
         
       }
       else {
         var el = '<a target="_blank"  href="' + src + '">Download</a>';
         currentElement.prepend(el);
-        currentElement.addClass('download');
+        currentElement.addClass('processed');
       }
     }
   });
   
-  // Call again in 2 sec
-  tid = setTimeout(addDownloadLinks, 2000);
+
 }
 
-// Add buttons
+// Add buttons and bind them
 function addButtonns(){
-  jQuery('.pane-chat-header').prepend('<div id="download-all">Download all audios</div>');
-  jQuery('.pane-chat-header').prepend('<div id="get-all-chat">Get all chat</div>');
-
-  jQuery('#get-all-chat').on('click', function(){
-    getAllChat();
-  });
+  if (!jQuery('.pane-chat-header').hasClass('processed')) {
+    // Add buttons
+    jQuery('.pane-chat-header').prepend('<a href="#" id="download-all">Download all audios</a>');
+    jQuery('.pane-chat-header').prepend('<a href="#" id="get-all-chat">Get all chat</a>');
   
+    // Add processed class
+    jQuery('.pane-chat-header').addClass('processed');
+    
+    // Bind buttons
+    jQuery('#get-all-chat').on('click', function(){
+      getAllChat();
+    });
+  }
 }
 
 
