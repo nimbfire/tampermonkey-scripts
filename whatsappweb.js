@@ -20,7 +20,7 @@ function addDownloadLinks() {
         
       }
       else {
-        var el = '<a href="' + src + '">Download</a>';
+        var el = '<a target="_blank"  href="' + src + '">Download</a>';
         currentElement.prepend(el);
         currentElement.addClass('download');
       }
